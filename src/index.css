@@ -1,0 +1,274 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Print Styles - Optimize notepad content for PDF printing */
+@media print {
+  /* Hide elements that shouldn't be printed */
+  .print\:hidden {
+    display: none !important;
+  }
+
+  /* Show elements only when printing */
+  .print\:block {
+    display: block !important;
+  }
+
+  /* Page setup with margins for header and footer */
+  @page {
+    margin: 2.5cm 1.5cm 2cm 1.5cm;
+    size: A4;
+  }
+
+  /* Body and container styling for print */
+  body {
+    background: white;
+    color: black;
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+
+  /* Main content area */
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Notepad title */
+  h1 {
+    font-size: 18pt;
+    font-weight: bold;
+    margin-bottom: 12pt;
+    color: black;
+  }
+
+  /* Product list container */
+  .space-y-4 > * {
+    margin-bottom: 16pt;
+    page-break-inside: avoid;
+  }
+
+  /* Product card styling for print */
+  .border {
+    border: 1pt solid #ccc !important;
+    padding: 8pt !important;
+    page-break-inside: avoid;
+  }
+
+  /* Price boxes border styling for print */
+  .print\:border-gray-400 {
+    border-color: #9ca3af !important;
+    border-width: 1pt !important;
+  }
+
+  /* Ensure price boxes maintain their size in print */
+  .print\:min-w-\[140px\] {
+    min-width: 140px !important;
+  }
+
+  /* Price boxes styling - keep same size */
+  .min-w-\[140px\] {
+    min-width: 140px !important;
+  }
+
+  /* Product image placeholder */
+  .bg-yellow-400 {
+    background: #fbbf24 !important;
+    border: 1pt solid #ccc !important;
+  }
+
+  /* Text colors for print */
+  .text-gray-500,
+  .text-gray-600,
+  .text-gray-700,
+  .text-gray-900 {
+    color: black !important;
+  }
+
+  .text-red-600 {
+    color: #dc2626 !important;
+  }
+
+  /* Price box styling for print */
+  .min-w-\[120px\] {
+    border: 1pt solid #ccc !important;
+    background: white !important;
+  }
+
+  /* Remove background colors */
+  .bg-white,
+  .bg-gray-50 {
+    background: white !important;
+  }
+
+  /* Ensure proper spacing */
+  .gap-4 {
+    gap: 8pt !important;
+  }
+
+  /* Prevent page breaks inside product items */
+  .flex {
+    page-break-inside: avoid;
+  }
+
+  /* Print header styling - Fixed at top left of each page */
+  .print-header {
+    display: block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    text-align: left;
+    padding: 0;
+    background: white;
+    z-index: 1000;
+    margin: 0;
+    page-break-after: avoid;
+    border: none !important;
+  }
+
+  /* Ensure logo image prints correctly - 20% larger and shifted 5px left */
+  .print-header {
+    margin-left: -5px !important;
+  }
+  
+  .print-header img {
+    width: 120% !important;
+    max-width: none !important;
+    height: auto !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Print footer styling - Fixed at bottom of each page */
+  .print-footer {
+    display: block !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10pt 0;
+    font-size: 9pt;
+    color: #000;
+    background: white;
+    z-index: 1000;
+    margin: 0;
+    page-break-before: avoid;
+    border: none !important;
+  }
+
+  /* Add padding to main content to account for fixed header/footer */
+  main {
+    padding-top: 40pt !important;
+    padding-bottom: 30pt !important;
+  }
+
+  /* Product layout for print - image left, text right */
+  .print\:flex-row {
+    flex-direction: row !important;
+  }
+
+  /* Remove borders and rounded corners for print */
+  .print\:border-0 {
+    border: none !important;
+  }
+
+  .print\:rounded-none {
+    border-radius: 0 !important;
+  }
+
+  .print\:p-0 {
+    padding: 0 !important;
+  }
+
+  /* Product image styling for print */
+  .print\:w-32 {
+    width: 128px !important;
+  }
+
+  .print\:h-32 {
+    height: 128px !important;
+  }
+
+  .print\:mr-6 {
+    margin-right: 24px !important;
+  }
+
+  /* Product text styling for print */
+  .print\:text-left {
+    text-align: left !important;
+  }
+
+  .print\:font-bold {
+    font-weight: bold !important;
+  }
+
+  .print\:font-normal {
+    font-weight: normal !important;
+  }
+
+  .print\:text-base {
+    font-size: 14pt !important;
+  }
+
+  .print\:text-lg {
+    font-size: 16pt !important;
+  }
+
+  .print\:mb-6 {
+    margin-bottom: 24px !important;
+  }
+
+  .print\:mb-4 {
+    margin-bottom: 16px !important;
+  }
+
+  .print\:mb-3 {
+    margin-bottom: 12px !important;
+  }
+
+  .print\:mt-4 {
+    margin-top: 16px !important;
+  }
+
+  .print\:leading-relaxed {
+    line-height: 1.625 !important;
+  }
+
+  .print\:pl-0 {
+    padding-left: 0 !important;
+  }
+
+  .print\:gap-4 {
+    gap: 16px !important;
+  }
+
+  /* Ensure product items don't break across pages */
+  .space-y-4 > * {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Product heading styling for print */
+  h2 {
+    font-size: 16pt !important;
+    font-weight: bold !important;
+    color: black !important;
+    margin-bottom: 12pt !important;
+  }
+}
+
