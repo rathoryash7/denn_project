@@ -9,9 +9,12 @@ import NotepadPage from './pages/NotepadPage';
  * Main application component with routing and context providers
  */
 function App() {
+  // Use /dehn basename only in production, not in development
+  const basename = import.meta.env.PROD ? '/dehn' : '';
+  
   return (
     <NotepadProvider>
-      <Router basename="/dehn">
+      <Router basename={basename}>
         <Routes>
           <Route path="/" element={<ProductDetailPage />} />
           <Route path="/notepad" element={<NotepadPage />} />

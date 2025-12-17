@@ -18,6 +18,7 @@ function NotepadPage() {
   const navigate = useNavigate();
   const [newProductNumber, setNewProductNumber] = useState('');
   const [newQuantity, setNewQuantity] = useState(0);
+  const [emailAddress, setEmailAddress] = useState('rathoryash1107@gmail.com');
 
   // Handle quantity update for a specific item
   const handleQuantityUpdate = (itemId, newQuantity) => {
@@ -230,11 +231,186 @@ function NotepadPage() {
 
       // Send PDF via backend API (supports real file attachments, any size)
       try {
+        const recipientEmail = emailAddress.trim() || 'rathoryash1107@gmail.com';
+        
+        // Create beautiful HTML email body
+        const emailHtml = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <style>
+              body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f5f5f5;
+              }
+              .email-container {
+                background-color: #ffffff;
+                border-radius: 8px;
+                padding: 40px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+              }
+              .header {
+                border-bottom: 3px solid #d32f2f;
+                padding-bottom: 20px;
+                margin-bottom: 30px;
+              }
+              .logo {
+                font-size: 28px;
+                font-weight: bold;
+                color: #d32f2f;
+                margin-bottom: 10px;
+              }
+              .title {
+                font-size: 24px;
+                font-weight: 600;
+                color: #1a1a1a;
+                margin: 0;
+              }
+              .content {
+                margin: 30px 0;
+              }
+              .greeting {
+                font-size: 16px;
+                margin-bottom: 20px;
+                color: #444444;
+              }
+              .message {
+                font-size: 15px;
+                color: #555555;
+                margin-bottom: 25px;
+                line-height: 1.8;
+              }
+              .info-box {
+                background-color: #f8f9fa;
+                border-left: 4px solid #d32f2f;
+                padding: 20px;
+                margin: 25px 0;
+                border-radius: 4px;
+              }
+              .info-title {
+                font-weight: 600;
+                color: #d32f2f;
+                margin-bottom: 10px;
+                font-size: 16px;
+              }
+              .dealer-details-box {
+                background-color: #fff3e0;
+                border: 1px solid #ffb74d;
+                padding: 20px;
+                margin: 25px 0;
+                border-radius: 4px;
+              }
+              .dealer-details-title {
+                font-weight: 600;
+                color: #e65100;
+                margin-bottom: 15px;
+                font-size: 16px;
+              }
+              .request-summary-box {
+                background-color: #e3f2fd;
+                border: 1px solid #64b5f6;
+                padding: 20px;
+                margin: 25px 0;
+                border-radius: 4px;
+              }
+              .request-summary-title {
+                font-weight: 600;
+                color: #1565c0;
+                margin-bottom: 15px;
+                font-size: 16px;
+              }
+              .info-text {
+                color: #666666;
+                font-size: 14px;
+                margin: 5px 0;
+              }
+              .footer {
+                margin-top: 40px;
+                padding-top: 20px;
+                border-top: 1px solid #e0e0e0;
+                text-align: center;
+                color: #888888;
+                font-size: 13px;
+              }
+              .button {
+                display: inline-block;
+                background-color: #0066cc;
+                color: #ffffff !important;
+                padding: 12px 30px;
+                text-decoration: none;
+                border-radius: 5px;
+                margin: 20px 0;
+                font-weight: 500;
+              }
+              .attachment-note {
+                background-color: #e3f2fd;
+                border: 1px solid #90caf9;
+                padding: 15px;
+                border-radius: 5px;
+                margin: 20px 0;
+                font-size: 14px;
+                color: #1565c0;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="email-container">
+              <div class="header">
+                <div class="logo">DEHN</div>
+                <h1 class="title">Dealer Quotation Request</h1>
+              </div>
+              
+              <div class="content">
+                <div class="greeting">Hello,</div>
+                
+                <div class="message">
+                  A dealer has submitted a quotation request through the website. The attached document contains the list of products selected by the dealer for pricing and further commercial discussion.
+                </div>
+                
+                <div class="attachment-note">
+                  📎 The quotation document is attached to this email for your review.
+                </div>
+                
+                <div class="dealer-details-box">
+                  <div class="dealer-details-title">Dealer Details</div>
+                  <div class="info-text"><strong>Dealer Name:</strong> Domeq</div>
+                  <div class="info-text"><strong>Dealer Email:</strong> drishti.maheshwari@domeqsolutions.com</div>
+                  <div class="info-text"><strong>Request Type:</strong> Quotation request</div>
+                  <div class="info-text"><strong>Source:</strong> Website</div>
+                </div>
+                
+                <div class="request-summary-box">
+                  <div class="request-summary-title">Request Summary</div>
+                  <div class="info-text"><strong>File Name:</strong> quotation.pdf</div>
+                  <div class="info-text"><strong>Number of Items:</strong> ${notepadItems.length} product(s)</div>
+                  <div class="info-text"><strong>Submitted On:</strong> ${new Date().toLocaleString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })}</div>
+                </div>
+                
+                <div class="message">
+                  If any additional details are required, please coordinate with the dealer accordingly.
+                </div>
+              </div>
+              
+              <div class="footer">
+                <p>© 2025 DEHN SE. All rights reserved.</p>
+                <p>This is an automated notification generated from the website. Please do not reply to this email.</p>
+              </div>
+            </div>
+          </body>
+          </html>
+        `;
+        
         const formData = new FormData();
-        formData.append('pdf', pdfBlob, 'notepad.pdf');
-        formData.append('recipientEmail', 'rathoryash1107@gmail.com');
-        formData.append('subject', 'Notepad PDF');
-        formData.append('message', 'Please find the notepad PDF attached.');
+        formData.append('pdf', pdfBlob, 'quotation.pdf');
+        formData.append('recipientEmail', recipientEmail);
+        formData.append('subject', 'Dealer Quotation Request – Domeq');
+        formData.append('message', emailHtml);
 
         const response = await fetch('http://localhost:3001/api/send-pdf-email', {
           method: 'POST',
@@ -249,8 +425,9 @@ function NotepadPage() {
         const result = await response.json();
         
         if (result.success) {
+          const recipientEmail = emailAddress.trim() || 'rathoryash1107@gmail.com';
           console.log(`PDF sent successfully! Size: ${(pdfBlob.size / 1024).toFixed(2)}KB`);
-          alert(`PDF sent successfully to rathoryash1107@gmail.com (${(pdfBlob.size / 1024).toFixed(2)}KB)`);
+          alert(`PDF sent successfully to ${recipientEmail} (${(pdfBlob.size / 1024).toFixed(2)}KB)`);
         } else {
           throw new Error(result.error || 'Unknown error');
         }
@@ -552,6 +729,26 @@ function NotepadPage() {
 
         {/* Notepad Footer Actions - Hidden when printing */}
         <div className="border-t border-gray-200 pt-6 mt-6 print:hidden">
+          {/* Email Address Input */}
+          <div className="mb-4">
+            <label htmlFor="email-input" className="block text-sm font-medium text-gray-700 mb-2">
+              Email Address for PDF
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                id="email-input"
+                type="email"
+                value={emailAddress}
+                onChange={(e) => setEmailAddress(e.target.value)}
+                placeholder="Enter email address"
+                className="flex-1 px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-gray-400"
+              />
+              <span className="text-xs text-gray-500 whitespace-nowrap">
+                PDF will be sent here
+              </span>
+            </div>
+          </div>
+          
           <div className="flex items-center gap-4 flex-wrap">
             <button
               onClick={handlePrintNotepad}

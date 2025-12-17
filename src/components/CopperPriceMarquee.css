@@ -1,0 +1,68 @@
+/* CopperPriceMarquee Component Styles */
+
+.copper-price-marquee {
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+  border-bottom: 2px solid #d0d0d0;
+  overflow: hidden;
+  position: relative;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  z-index: 50;
+  width: 100%;
+}
+
+.marquee-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.marquee-content {
+  display: flex;
+  white-space: nowrap;
+  animation: scroll 30s linear infinite;
+}
+
+.marquee-text {
+  padding: 0 100px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2c3e50;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+/* Pause animation on hover for better readability */
+.copper-price-marquee:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .copper-price-marquee {
+    height: 35px;
+  }
+
+  .marquee-text {
+    font-size: 12px;
+    padding: 0 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .marquee-text {
+    font-size: 11px;
+    padding: 0 30px;
+  }
+}
+

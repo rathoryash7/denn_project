@@ -67,12 +67,15 @@ app.post('/api/send-pdf-email', upload.single('pdf'), async (req, res) => {
     }
 
     // Email configuration
+    // Check if message is HTML (contains HTML tags) or plain text
+    const isHtml = message && (message.includes('<html') || message.includes('<!DOCTYPE') || message.includes('<div'));
+    
     const mailOptions = {
       from: emailUser,
       to: emailTo,
       subject: subject || 'Notepad PDF',
-      text: message || 'Please find the notepad PDF attached.',
-      html: `<p>${message || 'Please find the notepad PDF attached.'}</p>`,
+      text: isHtml ? 'Please find the notepad PDF attached. View this email in HTML format for the full content.' : (message || 'Please find the notepad PDF attached.'),
+      html: isHtml ? message : `<p>${message || 'Please find the notepad PDF attached.'}</p>`,
       attachments: [
         {
           filename: pdfFile.originalname || 'notepad.pdf',
