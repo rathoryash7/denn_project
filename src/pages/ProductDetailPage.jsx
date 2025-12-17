@@ -50,10 +50,11 @@ function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Copper Price Marquee Banner - Top of page */}
+      {/* Copper Price Marquee Banner - Fixed at top-center, visible while scrolling */}
       <CopperPriceMarquee />
       
-      <div className="py-8 px-6">
+      {/* Add padding-top to account for fixed marquee */}
+      <div className="pt-[40px] py-8 px-6">
         <div className="max-w-7xl mx-auto">
         {/* Product Info Section */}
         <ProductInfo articleData={articleData} />

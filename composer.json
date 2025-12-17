@@ -1,0 +1,13 @@
+{
+  "name": "dehn-project/api",
+  "description": "API dependencies for DEHN project email service",
+  "require": {
+    "phpmailer/phpmailer": "^6.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "DehnProject\\": "src/"
+    }
+  }
+}
+
