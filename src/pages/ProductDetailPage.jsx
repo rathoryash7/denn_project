@@ -21,6 +21,7 @@ function ProductDetailPage() {
     fullName: 'BCO ML2 B 180',
     description: 'Arrester for 2 single cores BLITZDUCTORconnect w. fault indication',
     price: 125.50,
+    moq: 100,
     currency: 'AED',
     partNumber: '927210 BCO ML2 B 180',
     gtin: '4013364405585',

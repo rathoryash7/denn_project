@@ -11,7 +11,7 @@ import NotepadPage from './pages/NotepadPage';
 function App() {
   return (
     <NotepadProvider>
-      <Router>
+      <Router basename="/dehn">
         <Routes>
           <Route path="/" element={<ProductDetailPage />} />
           <Route path="/notepad" element={<NotepadPage />} />
