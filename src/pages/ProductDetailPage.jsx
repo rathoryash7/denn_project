@@ -7,6 +7,7 @@ import CertificatesSection from '../components/CertificatesSection';
 import AccessoryButton from '../components/AccessoryButton';
 import AddToNotepad from '../components/AddToNotepad';
 import PriceContainer from '../components/PriceContainer';
+import CopperPriceMarquee from '../components/CopperPriceMarquee';
 
 /**
  * ProductDetailPage Component
