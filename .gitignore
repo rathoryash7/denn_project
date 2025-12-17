@@ -12,15 +12,6 @@ dist
 dist-ssr
 *.local
 
-# PHP/Composer
-vendor/
-composer.lock
-.env
-
-# Backend uploads
-backend/uploads/
-api/uploads/
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -3,23 +3,19 @@ import './CopperPriceMarquee.css';
 
 /**
  * CopperPriceMarquee Component
- * Displays the current copper price from London Metal Exchange (LME) in a fixed scrolling marquee banner
+ * Displays the current copper price from London Metal Exchange (LME) in a scrolling marquee banner
  * 
  * Features:
- * - Fixed position at top-center of viewport
- * - Remains visible while scrolling
  * - Fetches copper price from LME API (or uses fallback)
  * - Auto-refreshes every 10 minutes
- * - Displays timestamp of last fetch
- * - Smooth CSS-based marquee animation (right to left)
+ * - Smooth CSS-based marquee animation
  * - Handles loading and error states gracefully
- * - Fully responsive design
+ * - Responsive design
  */
 const CopperPriceMarquee = () => {
   const [copperPrice, setCopperPrice] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [lastUpdated, setLastUpdated] = useState(null);
 
   /**
    * Fetch copper price from LME API
@@ -63,20 +59,15 @@ const CopperPriceMarquee = () => {
       // In production, replace this with actual API data
       const mockPrice = (32000 + Math.random() * 4000).toFixed(2);
       setCopperPrice(parseFloat(mockPrice));
-      
-      // Update timestamp when price is fetched
-      setLastUpdated(new Date());
 
       // Alternative: Use a fixed value for consistency during development
       // setCopperPrice(34500);
-      // setLastUpdated(new Date());
 
     } catch (err) {
       console.error('Error fetching copper price:', err);
       setError(err.message);
       // Fallback to default price if API fails
       setCopperPrice(34500);
-      setLastUpdated(new Date());
     } finally {
       setLoading(false);
     }
@@ -106,42 +97,18 @@ const CopperPriceMarquee = () => {
     }).format(price);
   };
 
-  // Format date/time for display
-  const formatDateTime = (date) => {
-    if (!date) return '';
-    return date.toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-    });
-  };
-
-  // Generate marquee text with timestamp
-  const getMarqueeText = () => {
-    if (loading) {
-      return "Loading Today's Copper Price...";
-    }
-    
-    if (error || !copperPrice) {
-      const fallbackPrice = copperPrice || 34500;
-      const timestamp = lastUpdated ? formatDateTime(lastUpdated) : formatDateTime(new Date());
-      return `Today's Copper Price (as of ${timestamp}): AED ${formatPrice(fallbackPrice)} / MT`;
-    }
-    
-    const timestamp = lastUpdated ? formatDateTime(lastUpdated) : formatDateTime(new Date());
-    return `Today's Copper Price (as of ${timestamp}): AED ${formatPrice(copperPrice)} / MT`;
-  };
-
-  const marqueeText = getMarqueeText();
+  // Display text for the marquee
+  const marqueeText = loading
+    ? 'Loading Copper Price...'
+    : error
+    ? `Copper Price (LME): AED ${formatPrice(copperPrice || 34500)} / MT (Last Known)`
+    : `Copper Price (LME): AED ${formatPrice(copperPrice)} / MT`;
 
   return (
     <div className="copper-price-marquee">
       <div className="marquee-container">
         <div className="marquee-content">
-          {/* Duplicate content for seamless infinite loop */}
+          {/* Duplicate content for seamless loop */}
           <span className="marquee-text">{marqueeText}</span>
           <span className="marquee-text" aria-hidden="true">{marqueeText}</span>
           <span className="marquee-text" aria-hidden="true">{marqueeText}</span>

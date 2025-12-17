@@ -412,8 +412,7 @@ function NotepadPage() {
         formData.append('subject', 'Dealer Quotation Request – Domeq');
         formData.append('message', emailHtml);
 
-        // Send PDF via PHP API endpoint
-        const response = await fetch('/api/send-pdf-email.php', {
+        const response = await fetch('http://localhost:3001/api/send-pdf-email', {
           method: 'POST',
           body: formData,
         });
@@ -446,11 +445,11 @@ function NotepadPage() {
         URL.revokeObjectURL(url);
         
         if (error.message && error.message.includes('Failed to fetch')) {
-          alert('Email service is not available. PDF downloaded instead. Please check:\n1. Web server is running\n2. PHP email service is configured correctly\n3. API endpoint is accessible at /api/send-pdf-email.php');
+          alert('Backend server is not running. PDF downloaded instead. Please start the backend server: cd backend && npm start');
         } else {
           const errorDetails = error.details || error.message || error;
           const errorCode = error.code ? ` (Code: ${error.code})` : '';
-          alert(`PDF downloaded. Email failed: ${errorDetails}${errorCode}\n\nPlease check:\n1. PHP email service is configured\n2. .env file has correct EMAIL_USER and EMAIL_PASSWORD\n3. You're using Gmail App Password (not regular password)\n4. SMTP_HOST should be "smtp.gmail.com"\n5. PHPMailer library is installed (run: composer install)`);
+          alert(`PDF downloaded. Email failed: ${errorDetails}${errorCode}\n\nPlease check:\n1. Backend server is running\n2. backend/.env file has correct EMAIL_USER and EMAIL_PASSWORD\n3. You're using Gmail App Password (not regular password)\n4. SMTP_HOST should be "smtp.gmail.com" (not your email address)`);
         }
       }
 
