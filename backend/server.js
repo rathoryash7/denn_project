@@ -145,6 +145,19 @@ app.post('/api/send-pdf-email', upload.single('pdf'), async (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 
+// Root endpoint - API information
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Backend API is running',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      products: '/api/products',
+      sendPdfEmail: '/api/send-pdf-email'
+    }
+  });
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
