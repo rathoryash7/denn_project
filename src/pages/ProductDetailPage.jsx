@@ -39,7 +39,17 @@ function ProductDetailPage() {
         // If productId is provided, fetch that specific product
         // Otherwise, fetch all products and use the first one
         if (productId) {
-          response = await fetch(`${API_BASE_URL}/products/${productId}`);
+          try {
+            response = await fetch(`${API_BASE_URL}/products/${productId}`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+          } catch (fetchError) {
+            console.error('Fetch error (network/CORS):', fetchError);
+            throw new Error(`Network error: ${fetchError.message}. Check if backend is accessible and CORS is configured.`);
+          }
         } else {
           console.log('Fetching products from:', `${API_BASE_URL}/products`);
           
@@ -67,7 +77,17 @@ function ProductDetailPage() {
           if (data.success && data.data && data.data.length > 0) {
             // Use first product if no specific ID provided
             const firstProduct = data.data[0];
-            response = await fetch(`${API_BASE_URL}/products/${firstProduct._id}`);
+            try {
+              response = await fetch(`${API_BASE_URL}/products/${firstProduct._id}`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              });
+            } catch (fetchError) {
+              console.error('Fetch error (network/CORS):', fetchError);
+              throw new Error(`Network error: ${fetchError.message}. Check if backend is accessible and CORS is configured.`);
+            }
           } else if (data.success && data.data && data.data.length === 0) {
             throw new Error('No products available in database');
           } else {
