@@ -33,7 +33,7 @@ mongoose.connect(MONGODB_URI)
 
 // Middleware - CORS with explicit configuration
 // Allow all Vercel preview deployments and local development
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (mobile apps, curl, Postman, etc.)
     if (!origin) return callback(null, true);
@@ -69,10 +69,13 @@ app.use(cors({
   exposedHeaders: ['Content-Type', 'Authorization'],
   preflightContinue: false,
   optionsSuccessStatus: 204
-}));
+};
+
+app.use(cors(corsOptions));
 
 // CRITICAL: Explicitly handle OPTIONS requests (preflight) for all routes
-app.options('*', cors());
+// MUST use the same corsOptions to ensure consistent CORS headers
+app.options('*', cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
