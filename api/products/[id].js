@@ -54,8 +54,34 @@ async function authenticateAdmin(req, res) {
   }
 }
 
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
 export default async function handler(req, res) {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).json({});
+  }
+
+  // Add CORS headers to all responses
+  Object.keys(corsHeaders).forEach(key => {
+    res.setHeader(key, corsHeaders[key]);
+  });
+
   try {
+    // Check if MongoDB URI is configured
+    if (!process.env.MONGODB_URI || process.env.MONGODB_URI.includes('localhost')) {
+      return res.status(500).json({
+        success: false,
+        error: 'Database not configured. Please set MONGODB_URI environment variable.',
+        details: 'MongoDB connection string is required for production deployment.'
+      });
+    }
+
     await connectToDatabase();
 
     const { id } = req.query;
@@ -156,10 +182,22 @@ export default async function handler(req, res) {
     }
   } catch (error) {
     console.error('Product operation error:', error);
+    
+    // Handle MongoDB connection errors specifically
+    if (error.name === 'MongoServerSelectionError' || error.name === 'MongooseServerSelectionError') {
+      return res.status(500).json({
+        success: false,
+        error: 'Database connection failed',
+        details: 'Unable to connect to MongoDB. Please check your MONGODB_URI environment variable.',
+        message: error.message
+      });
+    }
+    
     return res.status(500).json({
       success: false,
       error: 'Error processing request',
-      details: error.message
+      details: error.message,
+      name: error.name
     });
   }
 }
