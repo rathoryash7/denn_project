@@ -412,8 +412,10 @@ function NotepadPage() {
         formData.append('subject', 'Dealer Quotation Request – Domeq');
         formData.append('message', emailHtml);
 
-        // Use relative URL for Vercel, or localhost for development
-        const apiUrl = import.meta.env.PROD ? '/api/send-pdf-email' : 'http://localhost:3001/api/send-pdf-email';
+        // Use deployed backend URL in production, or localhost for development
+        const apiUrl = import.meta.env.PROD 
+          ? 'https://backenddehnproject.vercel.app/api/send-pdf-email' 
+          : 'http://localhost:3001/api/send-pdf-email';
         const response = await fetch(apiUrl, {
           method: 'POST',
           body: formData,

@@ -1,12 +1,12 @@
 /**
  * API Configuration
- * Automatically detects if running on Vercel or local development
+ * Backend is deployed separately at https://backenddehnproject.vercel.app
  */
 
 const getApiBaseUrl = () => {
-  // In production (Vercel), use relative URLs
+  // In production (Vercel), use the deployed backend URL
   if (import.meta.env.PROD) {
-    return '/api';
+    return 'https://backenddehnproject.vercel.app/api';
   }
   
   // In development, use localhost
