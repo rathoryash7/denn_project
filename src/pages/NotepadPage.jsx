@@ -414,7 +414,7 @@ function NotepadPage() {
 
         // Use deployed backend URL in production, or localhost for development
         const apiUrl = import.meta.env.PROD 
-          ? 'https://backenddehnproject.vercel.app/api/send-pdf-email' 
+          ? 'https://backend-dehn-project-r1541ewf6-rathoryash7s-projects.vercel.app/api/send-pdf-email' 
           : 'http://localhost:3001/api/send-pdf-email';
         const response = await fetch(apiUrl, {
           method: 'POST',
