@@ -6,6 +6,7 @@ import { formatPrice } from '../utils/priceUtils';
 import DehnLogo from '../components/DehnLogo';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { API_BASE_URL } from '../config/api';
 
 /**
  * NotepadPage Component
@@ -412,10 +413,8 @@ function NotepadPage() {
         formData.append('subject', 'Dealer Quotation Request – Domeq');
         formData.append('message', emailHtml);
 
-        // Use deployed backend URL in production, or localhost for development
-        const apiUrl = import.meta.env.PROD 
-          ? 'https://backend-dehn-project-r1541ewf6-rathoryash7s-projects.vercel.app/api/send-pdf-email' 
-          : 'http://localhost:3001/api/send-pdf-email';
+        // Use API base URL from config
+        const apiUrl = `${API_BASE_URL}/send-pdf-email`;
         const response = await fetch(apiUrl, {
           method: 'POST',
           body: formData,

@@ -1,12 +1,12 @@
 /**
  * API Configuration
- * Backend is deployed separately at https://backend-dehn-project-r1541ewf6-rathoryash7s-projects.vercel.app
+ * Backend is deployed separately at https://backend-dehn-project-lcqehwnmx-rathoryash7s-projects.vercel.app
  */
 
 const getApiBaseUrl = () => {
   // In production (Vercel), use the deployed backend URL
   if (import.meta.env.PROD) {
-    return 'https://backend-dehn-project-r1541ewf6-rathoryash7s-projects.vercel.app/api';
+    return 'https://backend-dehn-project-lcqehwnmx-rathoryash7s-projects.vercel.app/api';
   }
   
   // In development, use localhost

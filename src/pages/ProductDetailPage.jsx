@@ -42,7 +42,18 @@ function ProductDetailPage() {
           response = await fetch(`${API_BASE_URL}/products/${productId}`);
         } else {
           console.log('Fetching products from:', `${API_BASE_URL}/products`);
-          response = await fetch(`${API_BASE_URL}/products`);
+          
+          try {
+            response = await fetch(`${API_BASE_URL}/products`, {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+          } catch (fetchError) {
+            console.error('Fetch error (network/CORS):', fetchError);
+            throw new Error(`Network error: ${fetchError.message}. Check if backend is accessible and CORS is configured.`);
+          }
           
           if (!response.ok) {
             const errorText = await response.text();
