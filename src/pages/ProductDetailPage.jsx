@@ -11,7 +11,7 @@ import PriceContainer from '../components/PriceContainer';
 import CopperPriceMarquee from '../components/CopperPriceMarquee';
 import PageHeader from '../components/PageHeader';
 
-const API_BASE_URL = 'http://localhost:3001/api';
+import { API_BASE_URL } from '../config/api';
 
 /**
  * ProductDetailPage Component

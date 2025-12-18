@@ -13,8 +13,8 @@ import ProtectedRoute from './components/ProtectedRoute';
  * Main application component with routing and context providers
  */
 function App() {
-  // Use /dehn basename only in production, not in development
-  const basename = import.meta.env.PROD ? '/dehn' : '';
+  // For Vercel, use empty basename. Change to '/dehn' if deploying to subpath
+  const basename = '';
   
   return (
     <AuthProvider>

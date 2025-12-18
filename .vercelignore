@@ -1,0 +1,11 @@
+backend/node_modules
+backend/uploads
+backend/.env
+node_modules
+.git
+.gitignore
+*.md
+backend/scripts
+backend/README.md
+backend/FIX_*.md
+

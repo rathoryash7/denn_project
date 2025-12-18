@@ -10,7 +10,7 @@ export const useAuth = () => {
   return context;
 };
 
-const API_BASE_URL = 'http://localhost:3001/api';
+import { API_BASE_URL } from '../config/api';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

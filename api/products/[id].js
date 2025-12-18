@@ -1,0 +1,165 @@
+import Product from '../../backend/models/Product.js';
+import User from '../../backend/models/User.js';
+import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
+
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/dehn-project';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+
+let cachedDb = null;
+
+async function connectToDatabase() {
+  if (cachedDb && mongoose.connection.readyState === 1) {
+    return cachedDb;
+  }
+
+  try {
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+    });
+    cachedDb = mongoose.connection;
+    return cachedDb;
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    throw error;
+  }
+}
+
+// Helper function to authenticate and authorize admin
+async function authenticateAdmin(req, res) {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return { error: { status: 401, message: 'No token provided. Authorization denied.' } };
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const user = await User.findById(decoded.userId).select('-password');
+    
+    if (!user) {
+      return { error: { status: 401, message: 'User not found. Token is invalid.' } };
+    }
+
+    if (user.role !== 'admin') {
+      return { error: { status: 403, message: 'Access denied. Admin privileges required.' } };
+    }
+
+    return { user };
+  } catch (authError) {
+    if (authError.name === 'JsonWebTokenError' || authError.name === 'TokenExpiredError') {
+      return { error: { status: 401, message: authError.message || 'Invalid or expired token' } };
+    }
+    return { error: { status: 401, message: 'Authentication failed' } };
+  }
+}
+
+export default async function handler(req, res) {
+  try {
+    await connectToDatabase();
+
+    const { id } = req.query;
+
+    if (req.method === 'GET') {
+      let product = await Product.findById(id);
+      
+      if (!product) {
+        product = await Product.findOne({ partNumber: id });
+      }
+      
+      if (!product || !product.isActive) {
+        return res.status(404).json({
+          success: false,
+          error: 'Product not found'
+        });
+      }
+      
+      return res.json({
+        success: true,
+        data: product
+      });
+    } else if (req.method === 'PUT') {
+      // Authenticate and authorize admin
+      const authResult = await authenticateAdmin(req, res);
+      if (authResult.error) {
+        return res.status(authResult.error.status).json({
+          success: false,
+          error: authResult.error.message
+        });
+      }
+
+      const updateData = req.body;
+
+      if (updateData.partNumber) {
+        const existingProduct = await Product.findOne({ 
+          partNumber: updateData.partNumber,
+          _id: { $ne: id }
+        });
+        if (existingProduct) {
+          return res.status(400).json({
+            success: false,
+            error: 'Product with this part number already exists'
+          });
+        }
+      }
+
+      const product = await Product.findByIdAndUpdate(
+        id,
+        updateData,
+        { new: true, runValidators: true }
+      );
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          error: 'Product not found'
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: 'Product updated successfully',
+        data: product
+      });
+    } else if (req.method === 'DELETE') {
+      // Authenticate and authorize admin
+      const authResult = await authenticateAdmin(req, res);
+      if (authResult.error) {
+        return res.status(authResult.error.status).json({
+          success: false,
+          error: authResult.error.message
+        });
+      }
+
+      const product = await Product.findByIdAndUpdate(
+        id,
+        { isActive: false },
+        { new: true }
+      );
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          error: 'Product not found'
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: 'Product deleted successfully'
+      });
+    } else {
+      return res.status(405).json({
+        success: false,
+        error: 'Method not allowed'
+      });
+    }
+  } catch (error) {
+    console.error('Product operation error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Error processing request',
+      details: error.message
+    });
+  }
+}
