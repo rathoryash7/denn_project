@@ -33,6 +33,7 @@ function ProductDetailPage() {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        setError(null);
         let response;
         
         // If productId is provided, fetch that specific product
@@ -40,27 +41,46 @@ function ProductDetailPage() {
         if (productId) {
           response = await fetch(`${API_BASE_URL}/products/${productId}`);
         } else {
+          console.log('Fetching products from:', `${API_BASE_URL}/products`);
           response = await fetch(`${API_BASE_URL}/products`);
+          
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Products API error:', response.status, errorText);
+            throw new Error(`API Error: ${response.status} - ${errorText}`);
+          }
+          
           const data = await response.json();
-          if (data.success && data.data.length > 0) {
+          console.log('Products response:', data);
+          
+          if (data.success && data.data && data.data.length > 0) {
             // Use first product if no specific ID provided
             const firstProduct = data.data[0];
             response = await fetch(`${API_BASE_URL}/products/${firstProduct._id}`);
+          } else if (data.success && data.data && data.data.length === 0) {
+            throw new Error('No products available in database');
           } else {
-            throw new Error('No products available');
+            throw new Error(data.error || 'Failed to fetch products');
           }
         }
 
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Product API error:', response.status, errorText);
+          throw new Error(`API Error: ${response.status} - ${errorText}`);
+        }
+
         const data = await response.json();
+        console.log('Product data:', data);
         
         if (data.success && data.data) {
           setArticleData(data.data);
         } else {
-          setError('Product not found');
+          setError(data.error || 'Product not found');
         }
       } catch (err) {
         console.error('Error fetching product:', err);
-        setError('Failed to load product');
+        setError(err.message || 'Failed to load product. Check browser console for details.');
       } finally {
         setLoading(false);
       }
