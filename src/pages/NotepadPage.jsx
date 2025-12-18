@@ -468,40 +468,21 @@ function NotepadPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header - Hidden when printing */}
-      <header className="border-b border-gray-200 bg-white sticky top-0 z-10 print:hidden">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <DehnLogo size="md" />
-          </div>
-          <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate('/')}
-              className="text-gray-700 hover:text-gray-900"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-            </button>
-            <div className="relative">
-              <div className="w-6 h-6 bg-gray-300 rounded-full"></div>
-              <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">1</span>
-            </div>
-            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <button className="text-gray-700">Menu</button>
-          </div>
-        </div>
-      </header>
+      {/* Copper Price Marquee Banner - Fixed at top */}
+      <CopperPriceMarquee />
+      
+      {/* Page Header with Login - Fixed below marquee */}
+      <PageHeader />
+      
+      {/* Legacy header removed - using PageHeader component above */}
 
       {/* Print Header - Only visible when printing */}
       <div className="print-header print:block hidden">
         <DehnLogo className="justify-start" />
       </div>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8 print:max-w-full print:px-0 print:py-4">
+      {/* Main Content - Add padding-top to account for fixed marquee (40px) + header height (~64px) */}
+      <main className="max-w-7xl mx-auto px-6 pb-8 print:max-w-full print:px-0 print:py-4" style={{ paddingTop: '104px' }}>
         <h1 className="text-2xl font-semibold mb-6 text-gray-900 print:text-xl print:mb-3 print:mt-0 print:text-left print:font-bold">Notepad</h1>
         {/* Grey line below Notepad heading - only visible when printing */}
         <div className="print:block hidden border-b border-gray-300 mb-4 print:mb-6"></div>

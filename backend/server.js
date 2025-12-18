@@ -6,6 +6,9 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose';
+import authRoutes from './routes/auth.js';
+import productRoutes from './routes/products.js';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -15,6 +18,18 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const upload = multer({ dest: 'uploads/' });
+
+// Connect to MongoDB
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/dehn-project';
+
+mongoose.connect(MONGODB_URI)
+  .then(() => {
+    console.log('✅ Connected to MongoDB');
+  })
+  .catch((error) => {
+    console.error('❌ MongoDB connection error:', error);
+    console.log('⚠️  Continuing without database connection (email functionality will still work)');
+  });
 
 // Middleware
 app.use(cors());
@@ -121,9 +136,18 @@ app.post('/api/send-pdf-email', upload.single('pdf'), async (req, res) => {
   }
 });
 
+// Use routes
+app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK' });
+  const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
+  res.json({ 
+    status: 'OK',
+    database: dbStatus,
+    timestamp: new Date().toISOString()
+  });
 });
 
 const PORT = process.env.PORT || 3001;

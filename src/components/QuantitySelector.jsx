@@ -6,9 +6,11 @@ import React from 'react';
  * Size adjusts automatically based on the value to ensure all digits are visible
  * @param {number} quantity - Current quantity value
  * @param {function} onChange - Callback function when quantity changes
+ * @param {boolean} disabled - Whether the input is disabled (for non-authenticated users)
  */
-const QuantitySelector = ({ quantity, onChange }) => {
+const QuantitySelector = ({ quantity, onChange, disabled = false }) => {
   const handleChange = (e) => {
+    if (disabled) return;
     const value = parseInt(e.target.value) || 1;
     const validValue = Math.max(1, value);
     if (onChange) {
@@ -33,7 +35,8 @@ const QuantitySelector = ({ quantity, onChange }) => {
         value={quantity}
         onChange={handleChange}
         min="1"
-        className="px-2 py-1.5 border border-gray-300 rounded text-center text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+        disabled={disabled}
+        className="px-2 py-1.5 border border-gray-300 rounded text-center text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500"
         style={{ width: `${getWidth()}px`, minWidth: '48px' }}
       />
     </div>
