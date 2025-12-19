@@ -210,11 +210,16 @@ app.get('/api/health', (req, res) => {
 // Vercel serverless function handler
 export default app;
 
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 3001;
+// Listen on port for Render and local development
+// Render requires the service to bind to a port
+const PORT = process.env.PORT || 3001;
+
+// Only start the server if not in Vercel serverless environment
+// Vercel uses the exported app directly, Render needs app.listen()
+if (!process.env.VERCEL) {
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    console.log(`Health check: http://localhost:${PORT}/api/health`);
+    console.log(`✅ Server is running on port ${PORT}`);
+    console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`📡 API base: http://localhost:${PORT}/api`);
   });
 }
