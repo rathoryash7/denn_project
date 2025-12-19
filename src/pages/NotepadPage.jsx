@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import QuantitySelector from '../components/QuantitySelector';
 import { formatPrice } from '../utils/priceUtils';
 import DehnLogo from '../components/DehnLogo';
+import CopperPriceMarquee from '../components/CopperPriceMarquee';
+import PageHeader from '../components/PageHeader';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { API_BASE_URL } from '../config/api';
