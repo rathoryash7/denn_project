@@ -1,12 +1,16 @@
 /**
  * API Configuration
- * Backend is deployed separately at https://backend-dehn-project-lcqehwnmx-rathoryash7s-projects.vercel.app
+ * Backend deployment URLs:
+ * - Render: https://denn-project.onrender.com
+ * - Vercel (old): https://backend-dehn-project-lcqehwnmx-rathoryash7s-projects.vercel.app
  */
 
 const getApiBaseUrl = () => {
-  // In production (Vercel), use the deployed backend URL
+  // In production, use Render backend
   if (import.meta.env.PROD) {
-    return 'https://backend-dehn-project-lcqehwnmx-rathoryash7s-projects.vercel.app/api';
+    // Check if RENDER_BACKEND_URL is set (for Render deployments)
+    // Otherwise use the Render backend by default
+    return import.meta.env.VITE_API_BASE_URL || 'https://denn-project.onrender.com/api';
   }
   
   // In development, use localhost
