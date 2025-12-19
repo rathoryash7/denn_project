@@ -1,0 +1,4 @@
+# Redirect all routes to index.html for React Router
+# This allows client-side routing to work on static hosting
+/*    /index.html   200
+

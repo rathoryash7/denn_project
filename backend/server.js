@@ -38,7 +38,12 @@ const corsOptions = {
     // Allow requests with no origin (mobile apps, curl, Postman, etc.)
     if (!origin) return callback(null, true);
     
-    // Allow all Vercel domains (preview deployments)
+    // Allow all Render domains (frontend will be on .onrender.com)
+    if (origin.includes('.onrender.com')) {
+      return callback(null, true);
+    }
+    
+    // Allow all Vercel domains (for legacy/preview deployments)
     if (origin.includes('.vercel.app')) {
       return callback(null, true);
     }
