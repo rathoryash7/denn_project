@@ -222,3 +222,4 @@ router.get('/admin/all', authenticate, authorizeAdmin, async (req, res) => {
 
 export default router;
 
+

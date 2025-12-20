@@ -90,15 +90,20 @@ if (!fs.existsSync('uploads')) {
   fs.mkdirSync('uploads');
 }
 
-// Configure nodemailer
+// Configure nodemailer with timeout settings for better reliability
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: process.env.SMTP_PORT || 587,
-  secure: false,
+  secure: false, // true for 465, false for other ports
   auth: {
     user: process.env.EMAIL_USER || 'your-email@gmail.com',
     pass: process.env.EMAIL_PASSWORD || 'your-app-password',
   },
+  connectionTimeout: 60000, // 60 seconds
+  greetingTimeout: 30000, // 30 seconds
+  socketTimeout: 60000, // 60 seconds
+  debug: false, // set to true for debugging
+  logger: false, // set to true for logging
 });
 
 // Endpoint to send PDF via email
@@ -150,8 +155,13 @@ app.post('/api/send-pdf-email', upload.single('pdf'), async (req, res) => {
 
     console.log('Attempting to send email to:', emailTo);
 
-    // Send email
-    const info = await transporter.sendMail(mailOptions);
+    // Send email with timeout handling (90 seconds timeout for large attachments)
+    const sendEmailPromise = transporter.sendMail(mailOptions);
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Email sending timeout after 90 seconds')), 90000)
+    );
+    
+    const info = await Promise.race([sendEmailPromise, timeoutPromise]);
 
     console.log('Email sent successfully:', info.messageId);
 
@@ -171,8 +181,8 @@ app.post('/api/send-pdf-email', upload.single('pdf'), async (req, res) => {
     let errorMessage = 'Failed to send email';
     if (error.code === 'EAUTH') {
       errorMessage = 'Authentication failed. Please check your EMAIL_USER and EMAIL_PASSWORD in .env file. Make sure you\'re using App Password, not regular password.';
-    } else if (error.code === 'ECONNECTION') {
-      errorMessage = 'Connection failed. Please check SMTP_HOST and SMTP_PORT in .env file.';
+    } else if (error.code === 'ECONNECTION' || error.code === 'ETIMEDOUT' || error.message?.includes('timeout')) {
+      errorMessage = 'Connection timeout. This may be due to network issues or Gmail SMTP server response time. Please try again.';
     } else if (error.message) {
       errorMessage = error.message;
     }

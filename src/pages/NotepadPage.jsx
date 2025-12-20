@@ -417,10 +417,18 @@ function NotepadPage() {
 
         // Use API base URL from config
         const apiUrl = `${API_BASE_URL}/send-pdf-email`;
+        
+        // Create abort controller for timeout (120 seconds for large PDF files)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 120000);
+        
         const response = await fetch(apiUrl, {
           method: 'POST',
           body: formData,
+          signal: controller.signal,
         });
+        
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           const errorData = await response.json();
